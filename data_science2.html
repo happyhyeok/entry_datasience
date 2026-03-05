@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강릉 데이터 탐정단: 2차시 워크북</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+        :root {
+            --primary-soft: #e3f2fd;
+            --primary-main: #4a90e2;
+            --accent-soft: #fff9c4;
+            --accent-main: #fbc02d;
+            --step-bg: #f9fbe7;
+            --step-border: #cddc39;
+            --text-dark: #2c3e50;
+            --bg-light: #f7f9fc;
+            --white: #ffffff;
+            --shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        body { font-family: 'Pretendard', -apple-system, sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.7; margin: 0; padding: 0; scroll-behavior: smooth; }
+        .container { max-width: 850px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); color: #1e3a5f; padding: 50px 20px; text-align: center; border-radius: 0 0 40px 40px; margin-bottom: 30px; }
+        header h1 { margin: 0; font-size: 2.2rem; font-weight: 800; }
+        
+        .tabs { display: flex; justify-content: space-around; background: #fff; padding: 10px; border-radius: 20px; margin-bottom: 20px; box-shadow: var(--shadow); position: sticky; top: 10px; z-index: 1000; }
+        .tab-link { flex: 1; padding: 15px; border: none; background: none; font-size: 1.1rem; font-weight: 700; cursor: pointer; color: #888; transition: 0.3s; border-radius: 15px; }
+        .tab-link.active { background-color: var(--primary-main); color: white; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3); }
+        
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: var(--white); padding: 30px; border-radius: 25px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid #edf2f7; }
+        h2 { color: var(--primary-main); font-size: 1.5rem; margin-top: 0; border-left: 5px solid var(--accent-main); padding-left: 15px; margin-bottom: 20px; }
+        
+        .webtoon-list { display: flex; flex-direction: column; gap: 0; }
+        .webtoon-list img { width: 100%; display: block; border-radius: 0; }
+        
+        .evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
+        .sms-box { background-color: #e3f2fd; padding: 20px; border-radius: 20px; font-size: 0.95rem; border: 2px dashed #90caf9; }
+
+        .logic-list { padding: 0; list-style: none; margin: 20px 0; background: var(--step-bg); border-radius: 20px; padding: 25px; border: 2px solid var(--step-border); }
+        .logic-item { display: flex; align-items: center; margin-bottom: 15px; font-weight: 600; font-size: 1.05rem; }
+        .logic-item span { background: #fff; border: 2px solid var(--step-border); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 0.9rem; color: var(--step-border); flex-shrink: 0; }
+
+        .mission-box { background-color: #f8f9fa; padding: 25px; border-radius: 20px; border: 1px solid #dee2e6; margin-bottom: 25px; }
+        .mission-title { font-weight: 800; color: #e67e22; margin-bottom: 15px; display: block; font-size: 1.1rem; }
+        .code-list { list-style: none; padding: 0; }
+        .code-list li { margin-bottom: 10px; font-size: 0.95rem; line-height: 1.5; }
+        .code-tip { background: #fff3e0; padding: 12px; border-radius: 12px; font-size: 0.9rem; color: #d35400; border-left: 4px solid #ff9800; margin-top: 15px; }
+
+        .input-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 15px; }
+        .input-group { flex: 1; }
+        .input-group label { display: block; font-weight: 700; margin-bottom: 8px; color: #444; font-size: 0.95rem; }
+        input[type="text"] { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; }
+        .check-btn { background: #607d8b; color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; white-space: nowrap; margin-top: 32px; }
+
+        .feedback-msg { display: none; margin-top: 10px; padding: 12px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; }
+        .correct { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .incorrect { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
+
+        .btn-main { background: var(--primary-main); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1.1rem; transition: 0.3s; margin-top: 20px; }
+        .checklist li { background: #f8fbff; margin-bottom: 12px; padding: 15px; border-radius: 15px; display: flex; align-items: center; border: 1px solid #eef2f7; list-style: none; }
+        .checklist-emoji { margin-right: 15px; font-size: 1.4rem; }
+
+        .quiz-item { margin-bottom: 35px; }
+        .quiz-question { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; color: #2c3e50; }
+        .quiz-options label { display: flex; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 12px; cursor: pointer; border: 2px solid #edf2f7; margin-bottom: 10px; }
+        .quiz-options input[type="radio"] { margin-right: 15px; width: 18px; height: 18px; }
+
+        footer { text-align: center; color: #cbd5e0; padding: 40px; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<header id="top">
+    <h1>🕵️‍♂️ 강릉 데이터 탐정단</h1>
+    <p>[2차시] 디지털 수사 장부 완성하기</p>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button id="link-story" class="tab-link active" onclick="openTab(event, 'Story')">📜 수사 스토리</button>
+        <button id="link-task" class="tab-link" onclick="openTab(event, 'Task')">💻 장부 코딩</button>
+        <button id="link-quiz" class="tab-link" onclick="openTab(event, 'Quiz')">🏆 자격 시험</button>
+    </div>
+
+    <div id="Story" class="tab-content active">
+        <div class="card">
+            <h2>수작업은 이제 그만!</h2>
+            <div class="webtoon-list">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_1.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_2.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_3.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_4.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_5.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_6.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_7.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_8.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_9.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_10.png">
+                <img src="https://happyhyeok.github.io/entry_datasience/story2_11.png">
+            </div>
+            <p style="margin-top:20px;">본부에 제보가 쏟아지고 있어요! 하지만 1차시에서 만든 변수는 정보를 **딱 하나**만 기억할 수 있었죠. 새로운 제보를 넣으면 예전 정보가 지워지는 문제를 해결하기 위해, 말만 하면 자동으로 기록되는 **[디지털 수사 기록기]**를 만들어 봅시다!</p>
+            <button class="btn-main" style="background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);" onclick="openTab(null, 'Task')">🕵️‍♂️ 디지털 기록기 코딩하기</button>
+        </div>
+    </div>
+
+    <div id="Task" class="tab-content">
+        <div class="card">
+            <h2>실습 1: 1차시 수사 본부 불러오기</h2>
+            <ul class="checklist">
+                <li><span class="checklist-emoji">⬜</span> 1. <b>엔트리 접속:</b> <a href="https://playentry.org" target="_blank">playentry.org</a> 로그인</li>
+                <li><span class="checklist-emoji">⬜</span> 2. <b>작품 열기:</b> 나의 작품 중 <b>[1단계_수집기_본인이름]</b> 열기</li>
+                <li><span class="checklist-emoji">⬜</span> 3. <b>상태 확인:</b> 1차시에서 만든 <b>변수 3개</b>와 <b>리스트 1개</b>가 있는지 확인!</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>데이터 탐정의 자동화 논리</h2>
+            <ul class="logic-list">
+                <li class="logic-item"><span>1</span> 사건 해결을 위해 정보를 수집하고 분석해야 해요!</li>
+                <li class="logic-item"><span>2</span> 분석을 잘 하려면 정보를 체계적으로 정리해서 입력해야 하죠.</li>
+                <li class="logic-item"><span>3</span> 컴퓨터는 정보를 <b>'변수'</b>라는 그릇에 담아서 기억해요.</li>
+                <li class="logic-item"><span>4</span> 변수는 정보를 딱 <b>'한 개'</b>만 기억할 수 있어 예전 기록이 사라져요.</li>
+                <li class="logic-item"><span>5</span> 그래서 모든 제보를 사라지지 않게 쌓아둘 <b>'리스트'</b>라는 장부가 필요해요!</li>
+                <li class="logic-item"><span>🚀</span> 자, 어떤 순서로 코딩할지 알고리즘을 설계해 봅시다!</li>
+            </ul>
+
+            <div class="input-row">
+                <div class="input-group"><label>질문 1. 제보자에게 정보를 물어보고 대답을 기다릴 때 사용하는 블록은?</label><input type="text" id="v1"></div>
+                <button class="check-btn" onclick="checkAnswer(1)">확인하기</button>
+            </div>
+            <div id="feed1" class="feedback-msg"></div>
+
+            <div class="input-row">
+                <div class="input-group"><label>질문 2. 수사를 시작하기 전, 장부를 깨끗이 비우는 작업을 무엇이라고 할까요?</label><input type="text" id="v2"></div>
+                <button class="check-btn" onclick="checkAnswer(2)">확인하기</button>
+            </div>
+            <div id="feed2" class="feedback-msg"></div>
+        </div>
+
+        <div class="card">
+            <h2>실습 2: 디지털 기록기 코딩하기</h2>
+            
+            <div class="mission-box">
+                <span class="mission-title">👮 미션 1: 주인공 탐정 코딩 (현장 지휘)</span>
+                <p>오브젝트 목록에서 <b>탐정 캐릭터</b>를 선택하고 아래 블록을 조립하세요.</p>
+                <div class="code-list">
+                    1. <code>장면이 시작되었을 때</code> 시작 블록 가져오기<br>
+                    2. <code>"지금부터 커피 향기 도난 사건 수사를 시작한다!"</code>라고 2초간 말하기
+                </div>
+            </div>
+
+            <div class="mission-box">
+                <span class="mission-title">🤖 미션 2: 조수 로봇 코딩 (데이터 수집)</span>
+                <p>오브젝트 목록에서 <b>조수 로봇</b>을 선택하고 9단계 알고리즘을 완성하세요.</p>
+                <div class="code-list">
+                    1. <code>오브젝트를 클릭했을 때</code> 시작 블록 가져오기<br>
+                    2. <code>"언제 발생했나요?"</code>를 묻고 대답 기다리기<br>
+                    3. <code>[시간]</code> 변수를 <code>(대답)</code>으로 정하기<br>
+                    4. <code>"어디서 발생했나요?"</code>를 묻고 대답 기다리기<br>
+                    5. <code>[장소]</code> 변수를 <code>(대답)</code>으로 정하기<br>
+                    6. <code>"냄새가 얼마나 심했나요?(1~10)"</code>를 묻고 대답 기다리기<br>
+                    7. <code>[냄새 농도]</code> 변수를 <code>(대답)</code>으로 정하기<br>
+                    8. <b>핵심!</b> <code>(시간 + 장소 + 냄새 농도)</code> 항목을 <code>[수사로그]</code>에 추가하기<br>
+                    9. <code>"기록 완료! 탐정님, 장부를 확인해 주세요."</code>라고 말하기
+                </div>
+                <div class="code-tip">
+                    <b>💡 꿀팁:</b> 8번 단계에서 3개의 값을 합칠 때는 <b>[계산]</b> 꾸러미의 <code>(안녕)과 (엔트리)를 합치기</code> 블록을 여러 개 겹쳐서 사용하세요!
+                </div>
+            </div>
+
+            <div class="mission-box">
+                <span class="mission-title">🧹 미션 3: 초기화 버튼 코딩 (장부 정리)</span>
+                <p>리스트를 비우기 위해서는 <b>반복문</b>을 사용해야 합니다. <b>버튼 오브젝트</b>에 아래 로직을 조립하세요.</p>
+                <div class="code-list">
+                    1. <code>오브젝트를 클릭했을 때</code> 시작 블록 가져오기<br>
+                    2. <code>[흐름]</code> 꾸러미에서 <b>(10)번 반복하기</b> 블록 가져오기<br>
+                    3. 반복 횟수(10) 자리에 <code>[자료]</code>의 <b>(수사로그의 항목 수)</b> 블록 넣기<br>
+                    4. 반복문 안쪽에 <code>[자료]</code>의 <b>(1)번째 항목을 [수사로그]에서 삭제하기</b> 넣기<br>
+                    5. <code>"수사 장부를 깨끗이 비웠습니다!"</code>라고 1초간 말하기
+                </div>
+            </div>
+
+            <ul class="checklist" style="margin-top:30px;">
+                <li><span class="checklist-emoji">⬜</span> 1. <b>작동 확인:</b> 로봇을 클릭해 제보 데이터가 리스트에 차곡차곡 쌓이나요?</li>
+                <li><span class="checklist-emoji">⬜</span> 2. <b>초기화 확인:</b> 버튼을 눌렀을 때 수사로그가 싹 비워지나요?</li>
+                <li><span class="checklist-emoji">⬜</span> 3. <b>최종 저장:</b> 완성된 자동 수사 시스템을 엔트리에 저장하기!</li>
+            </ul>
+            <button class="btn-main" style="background: linear-gradient(135deg, #fbc02d 0%, #f9a825 100%); color: #333;" onclick="openTab(null, 'Quiz')">🏅 자격 시험 도전하러 가기</button>
+        </div>
+    </div>
+
+    <div id="Quiz" class="tab-content">
+        <div class="card">
+            <h2>🏅 데이터 탐정 자격 시험 (2단계)</h2>
+            <form id="quizForm">
+                <div class="quiz-item">
+                    <p class="quiz-question">Q1. 묻고 답하기 블록을 통해 입력받은 값을 가지고 있는 블록은?</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q1" value="1"> 대답</label>
+                        <label><input type="radio" name="q1" value="0"> 변수</label>
+                    </div>
+                </div>
+                <div class="quiz-item">
+                    <p class="quiz-question">Q2. 리스트에 데이터를 추가하면, 기존 데이터는 어떻게 되나요?</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q2" value="1"> 기존 데이터는 사라지지 않고, 새로 추가된 데이터는 기존 데이터 아래에 차곡 차곡 쌓인다.</label>
+                        <label><input type="radio" name="q2" value="0"> 기존 데이터는 사라지고, 새로운 데이터가 추가된다.</label>
+                    </div>
+                </div>
+                <div class="quiz-item">
+                    <p class="quiz-question">Q3. 엔트리에서 리스트를 싹 비우기 위해 필요한 알고리즘은 무엇인가요?</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q3" value="1"> 리스트의 항목 수만큼 1번째 항목 삭제를 반복한다</label>
+                        <label><input type="radio" name="q3" value="0"> 삭제 블록 하나만 쓰면 자동으로 다 지워진다</label>
+                    </div>
+                </div>
+                <div class="quiz-item">
+                    <p class="quiz-question">Q4. 여러 개의 변수 값을 하나로 합쳐서 보여주고 싶을 때 사용하는 꾸러미는?</p>
+                    <div class="quiz-options"><label><input type="radio" name="q4" value="1"> 계산 꾸러미</label><label><input type="radio" name="q4" value="0"> 붓 꾸러미</label></div>
+                </div>
+                <div class="quiz-item">
+                    <p class="quiz-question">Q5. 데이터 수집기를 만든 탐정단이 다음에 해야 할 일은?</p>
+                    <div class="quiz-options"><label><input type="radio" name="q5" value="1"> 모인 데이터를 분석해 범인의 규칙 찾아내기</label><label><input type="radio" name="q5" value="0"> 기록된 데이터를 모두 지우고 퇴근하기</label></div>
+                </div>
+            </form>
+            <button class="btn-main" onclick="gradeQuiz()">✅ 채점하기</button>
+            <div id="finalResult" class="final-result" style="display:none; margin-top:20px; text-align:center;"><div id="finalScore" style="font-size: 1.5rem; font-weight: 800; color: #4a90e2;"></div><div id="finalDesc"></div></div>
+            <div class="card" style="margin-top:20px; background-color: #fff8e1; border: 2px solid #ffca28;">
+                <h3 style="margin-top:0; color:#e67e22;">💡 다음 시간 안내</h3>
+                <p>수고하셨습니다! 3차시에는 우리가 만든 장부와 **강릉시의 실제 공공데이터**를 비교하며 이상한 점(Spike)을 찾아볼 거예요!</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>© 2026 강릉 데이터 탐정단 교육 프로그램</footer>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
+        tablinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tablinks.length; i++) { 
+            tablinks[i].classList.remove("active");
+            if (tablinks[i].id === "link-" + tabName.toLowerCase()) tablinks[i].classList.add("active");
+        }
+        document.getElementById(tabName).style.display = "block";
+        window.scrollTo(0, 0);
+    }
+    function checkAnswer(num) {
+        const input = document.getElementById('v' + num).value.trim();
+        const feed = document.getElementById('feed' + num);
+        feed.style.display = 'block';
+        const kw = [["묻고 답하기", "묻고", "대답 기다리기"], ["초기화", "삭제", "비우기"]];
+        if (kw[num-1].some(k => input.includes(k))) {
+            feed.className = "feedback-msg correct"; feed.innerHTML = "✅ 맞았습니다! 이제 이 로직대로 코딩을 시작해 봅시다.";
+        } else {
+            feed.className = "feedback-msg incorrect"; feed.innerHTML = "💡 힌트: 시민의 제보를 받고 장부를 정리하는 블록이나 기능을 떠올려 보세요!";
+        }
+    }
+    function gradeQuiz() {
+        let score = 0; const f = document.getElementById('quizForm');
+        for (let i = 1; i <= 5; i++) { if (f.elements['q' + i].value === "1") score++; }
+        document.getElementById('finalResult').style.display = 'block';
+        document.getElementById('finalScore').innerText = `5문제 중 ${score}문제 정답!`;
+        document.getElementById('finalDesc').innerHTML = score === 5 ? "🎖️ <b>자동화 마스터!</b> 이제 대량의 데이터 수집도 문제없습니다!" : "🔍 데이터 흐름을 다시 한번 고민해 볼까요?";
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+</script>
+</body>
+</html>
